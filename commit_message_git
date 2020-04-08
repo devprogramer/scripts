@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+commit_message=""
+first_word=""
+
+while [ -n "$1" ]
+do
+    case "$1" in
+        -m) commit_message="$2"
+        ;;
+      
+    esac
+    shift
+done
+
+first_word="$(echo $commit_message| awk -F " " '{print $1}')"
+new_commit_message="${first_word}_$(git rev-parse --abbrev-ref HEAD | awk -F "__" '{print $2}') $(echo $commit_message| sed "s/$first_word//")"
+
+echo "$new_commit_message"

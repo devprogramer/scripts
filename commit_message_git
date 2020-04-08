@@ -4,12 +4,14 @@
 commit_message=""
 first_word=""
 
+inc_params="$*"
+
 while [ -n "$1" ]
 do
     case "$1" in
         -m) commit_message="$2"
         ;;
-      
+        
     esac
     shift
 done
@@ -17,4 +19,8 @@ done
 first_word="$(echo $commit_message| awk -F " " '{print $1}')"
 new_commit_message="${first_word}_$(git rev-parse --abbrev-ref HEAD | awk -F "__" '{print $2}') $(echo $commit_message| sed "s/$first_word//")"
 
-echo "$new_commit_message"
+#echo "$new_commit_message"
+#echo "$inc_params"
+echo "command: git $(echo $inc_params | sed "s/\-m\ [^-]\+/ -m \"$new_commit_message\" /")"
+
+eval "git $(echo $inc_params | sed "s/\-m\ [^-]\+/ -m \"$new_commit_message\" /")"
